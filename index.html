@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Black Force 007 — Samajik জ্ঞান কুইজ</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">BF007</div>
+      <div>
+        <h1>Black Force 007</h1>
+        <p class="subtitle">Samajik জ্ঞান কুইজ</p>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="btn-settings" title="Settings">⚙️</button>
+      <button id="btn-leaderboard" title="Leaderboard">🏆</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Start Screen / Config -->
+    <section id="start-screen" class="card center">
+      <h2>কুইজ শুরু করুন</h2>
+      <div class="settings-row">
+        <label>প্রশ্ন সংখ্যা:
+          <select id="select-total-questions">
+            <option value="10">10</option>
+            <option value="15" selected>15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+        <label>প্রতিটি প্রশ্নের সময়:
+          <select id="select-timer">
+            <option value="15" selected>15 সেকেন্ড</option>
+            <option value="20">20 সেকেন্ড</option>
+          </select>
+        </label>
+      </div>
+      <p class="muted">প্রতিবার খেলার সময় প্রশ্নগুলিকে র‍্যান্ডম করে দেখাবে।</p>
+      <div class="start-actions">
+        <button id="btn-start" class="primary">শুরু করুন</button>
+        <button id="btn-rules" class="ghost">রুল/সিস্টেম</button>
+      </div>
+    </section>
+
+    <!-- Quiz Screen -->
+    <section id="quiz-screen" class="hidden">
+      <div class="quiz-top">
+        <div class="meta">
+          <div class="meta-item">প্রশ্ন: <span id="meta-current">1</span>/<span id="meta-total">15</span></div>
+          <div class="meta-item">স্কোর: <span id="meta-score">0</span></div>
+          <div class="meta-item">স্ট্রিক: <span id="meta-streak">0</span></div>
+        </div>
+        <div class="timer">
+          <div class="timer-label">বাকী সময়: <span id="timer-remaining">15</span>s</div>
+          <div class="progress">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-card card">
+        <table class="question-table">
+          <tr><td id="question-text">প্রশ্নটি এখানে দেখাবে</td></tr>
+        </table>
+
+        <div id="options" class="options-list">
+          <!-- 옵션গুলি স্ক্রিপ্ট দ্বারা যুক্ত হবে -->
+        </div>
+      </div>
+
+      <div class="quiz-footer">
+        <div class="feedback" id="feedback"></div>
+        <div class="footer-actions">
+          <button id="btn-next" class="ghost">পরবর্তী</button>
+          <button id="btn-quit" class="danger">বাইরে যান</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result Screen -->
+    <section id="result-screen" class="hidden card center">
+      <h2>ফলাফল</h2>
+      <div class="result-grid">
+        <div>সর্বমোট স্কোর: <strong id="result-score">0</strong></div>
+        <div>সঠিক: <strong id="result-correct">0</strong></div>
+        <div>ভুল: <strong id="result-wrong">0</strong></div>
+        <div>মোট সময় ব্যয়: <strong id="result-time">0s</strong></div>
+        <div>বেস পয়েন্ট: <strong id="result-base">0</strong></div>
+        <div>টাইম বোনাস: <strong id="result-timebonus">0</strong></div>
+        <div>স্ট্রিক বোনাস: <strong id="result-streakbonus">0</strong></div>
+      </div>
+
+      <div class="achievements" id="achievements">
+        <h3>অ্যাচিভমেন্ট/বাজ</h3>
+        <div id="badges" class="badges"></div>
+      </div>
+
+      <div class="result-actions">
+        <input id="player-name" placeholder="আপনার নাম রাখুন (লিডারবোর্ডে সেভ করতে)" />
+        <button id="btn-save-score" class="primary">লিডারবোর্ডে সেভ করুন</button>
+        <button id="btn-play-again" class="ghost">আবার খেলুন</button>
+        <button id="btn-home" class="danger">হোম</button>
+      </div>
+    </section>
+
+    <!-- Leaderboard Modal -->
+    <section id="leaderboard-screen" class="hidden card">
+      <div class="leaderboard-header">
+        <h2>লিডারবোর্ড</h2>
+        <div class="leaderboard-actions">
+          <button id="btn-export">Export JSON</button>
+          <button id="btn-import">Import JSON</button>
+          <button id="btn-clear-leaderboard" class="danger">Clear</button>
+        </div>
+      </div>
+      <ol id="leaderboard-list" class="leaderboard-list"></ol>
+      <div class="center">
+        <button id="btn-leaderboard-close" class="ghost">Close</button>
+      </div>
+    </section>
+
+    <!-- Rules Modal -->
+    <section id="rules-screen" class="hidden card">
+      <h3>কুইজ সিস্টেম</h3>
+      <ul>
+        <li>প্রতিটি সঠিক উত্তরে বেস পয়েন্ট: 100</li>
+        <li>প্রতিটি প্রশ্নে বাকি সময় অনুযায়ী টাইম বোনাস থাকবে</li>
+        <li>কনসেটিউটিভ সঠিক উত্তর দিলে স্ট্রিক বোনাস পাবেন</li>
+        <li>টাইম আউট হলে পরবর্তী প্রশ্নে অটো যাবে</li>
+        <li>প্রশ্ন প্রতিবার র‍্যান্ডম হবে — পুনরাবৃত্তি কম থাকবে</li>
+      </ul>
+      <div class="center">
+        <button id="btn-rules-close" class="primary">বুঝেছি</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <small>© 2025 Black Force 007 • Samajik জ্ঞান কুইজ</small>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
